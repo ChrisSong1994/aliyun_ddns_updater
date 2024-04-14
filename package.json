@@ -25,7 +25,8 @@
     "@alicloud/openapi-client": "^0.3.0",
     "@alicloud/tea-console": "^1.0.0",
     "@alicloud/tea-typescript": "latest",
-    "@alicloud/tea-util": "^1.4.0"
+    "@alicloud/tea-util": "^1.4.0",
+    "node-schedule": "^2.1.1"
   },
   "files": [
     "dist",

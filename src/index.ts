@@ -5,6 +5,7 @@ import Env from "@alicloud/darabonba-env";
 import OpenApi, * as $OpenApi from "@alicloud/openapi-client";
 import Console from "@alicloud/tea-console";
 import * as $tea from "@alicloud/tea-typescript";
+import schedule from "node-schedule";
 
 const IP_INFO_URL = "https://ipinfo.io/json";
 
@@ -15,6 +16,9 @@ export default class Client {
   static Initialization(regionId: string): Dns {
     let config = new $OpenApi.Config({});
     // 您的AccessKey ID
+    // config.accessKeyId = Env.getEnv("ALICLOUD_ACCESS_KEY_ID");
+    // config.accessKeySecret = Env.getEnv("ALICLOUD_ACCESS_KEY_SECRET");
+
     config.accessKeyId = Env.getEnv("ALICLOUD_ACCESS_KEY_ID");
     config.accessKeySecret = Env.getEnv("ALICLOUD_ACCESS_KEY_SECRET");
     // 您的可用区ID
@@ -116,10 +120,20 @@ export default class Client {
 
 // Client.main(process.argv.slice(2));
 
-Client.main({
+const MY_ALIYUN_CONFIG = {
   regionid: "cn-hangzhou", // 区域id
   // currentHostIP: "125.119.200.220", // 主机ip
   domainName: "chrissong.top", // 域名
   RR: "home", // 解析主机
   recordType: "A", // 记录类型
+};
+
+Client.main(MY_ALIYUN_CONFIG);
+
+// 每半个小时执行一次
+schedule.scheduleJob("*/30 * * * *", function () {
+  Console.log(
+    "------------------- 阿里云 ddns 解析程序执行！--------------------"
+  );
+  Client.main(MY_ALIYUN_CONFIG);
 });

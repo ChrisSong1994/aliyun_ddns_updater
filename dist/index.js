@@ -29,6 +29,7 @@ const darabonba_env_1 = __importDefault(require("@alicloud/darabonba-env"));
 const $OpenApi = __importStar(require("@alicloud/openapi-client"));
 const tea_console_1 = __importDefault(require("@alicloud/tea-console"));
 const $tea = __importStar(require("@alicloud/tea-typescript"));
+const node_schedule_1 = __importDefault(require("node-schedule"));
 const IP_INFO_URL = "https://ipinfo.io/json";
 class Client {
     /**
@@ -37,6 +38,8 @@ class Client {
     static Initialization(regionId) {
         let config = new $OpenApi.Config({});
         // 您的AccessKey ID
+        // config.accessKeyId = Env.getEnv("ALICLOUD_ACCESS_KEY_ID");
+        // config.accessKeySecret = Env.getEnv("ALICLOUD_ACCESS_KEY_SECRET");
         config.accessKeyId = darabonba_env_1.default.getEnv("ALICLOUD_ACCESS_KEY_ID");
         config.accessKeySecret = darabonba_env_1.default.getEnv("ALICLOUD_ACCESS_KEY_SECRET");
         // 您的可用区ID
@@ -117,11 +120,17 @@ class Client {
 }
 exports.default = Client;
 // Client.main(process.argv.slice(2));
-Client.main({
+const MY_ALIYUN_CONFIG = {
     regionid: "cn-hangzhou",
     // currentHostIP: "125.119.200.220", // 主机ip
     domainName: "chrissong.top",
     RR: "home",
     recordType: "A",
+};
+Client.main(MY_ALIYUN_CONFIG);
+// 每半个小时执行一次
+node_schedule_1.default.scheduleJob("*/30 * * * *", function () {
+    tea_console_1.default.log("------------------- 阿里云 ddns 解析程序执行！--------------------");
+    Client.main(MY_ALIYUN_CONFIG);
 });
 //# sourceMappingURL=index.js.map
