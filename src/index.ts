@@ -119,15 +119,6 @@ export default class Client {
   }
 }
 
-// Client.main(process.argv.slice(2));
-
-const MY_ALIYUN_CONFIG = {
-  // regionid: "cn-hangzhou", // 区域id
-  // currentHostIP: "125.119.200.220", // 主机ip
-  // domainName: "chrissong.top", // 域名
-  // RR: "home", // 解析主机
-  // recordType: "A", // 记录类型
-};
 
 Client.main();
 
