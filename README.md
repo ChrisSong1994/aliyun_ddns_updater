@@ -1,4 +1,4 @@
-# aliyun_ddns_server
+# aliyun_ddns_updater
 
 阿里云动态域名解析服务
 
