@@ -12,5 +12,5 @@ export default class Client {
      * 修改解析记录
      */
     static UpdateDomainRecord(client: Dns, req: $Dns.UpdateDomainRecordRequest): Promise<void>;
-    static main(args: any): Promise<void>;
+    static main(): Promise<void>;
 }

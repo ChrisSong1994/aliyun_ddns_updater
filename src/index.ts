@@ -15,10 +15,7 @@ export default class Client {
    */
   static Initialization(regionId: string): Dns {
     let config = new $OpenApi.Config({});
-    // 您的AccessKey ID
-    // config.accessKeyId = Env.getEnv("ALICLOUD_ACCESS_KEY_ID");
-    // config.accessKeySecret = Env.getEnv("ALICLOUD_ACCESS_KEY_SECRET");
-
+    // AccessKey ID
     config.accessKeyId = Env.getEnv("ALICLOUD_ACCESS_KEY_ID");
     config.accessKeySecret = Env.getEnv("ALICLOUD_ACCESS_KEY_SECRET");
     // 您的可用区ID
@@ -71,8 +68,12 @@ export default class Client {
     }
   }
 
-  static async main(args: any): Promise<void> {
-    const { regionid, domainName, RR, recordType } = args;
+  static async main(): Promise<void> {
+    const domainName = Env.getEnv("DOMAIN_NAME");
+    const RR = Env.getEnv("RR");
+    const regionid = Env.getEnv("REGION_ID") || "cn-hangzhou"; // 默认杭州
+    const recordType = Env.getEnv("RECORD_TYPE") || "A"; // 默认 A 记录
+
     let client = Client.Initialization(regionid);
     let resp = await Client.DescribeDomainRecords(
       client,
@@ -121,19 +122,19 @@ export default class Client {
 // Client.main(process.argv.slice(2));
 
 const MY_ALIYUN_CONFIG = {
-  regionid: "cn-hangzhou", // 区域id
+  // regionid: "cn-hangzhou", // 区域id
   // currentHostIP: "125.119.200.220", // 主机ip
-  domainName: "chrissong.top", // 域名
-  RR: "home", // 解析主机
-  recordType: "A", // 记录类型
+  // domainName: "chrissong.top", // 域名
+  // RR: "home", // 解析主机
+  // recordType: "A", // 记录类型
 };
 
-Client.main(MY_ALIYUN_CONFIG);
+Client.main();
 
 // 每半个小时执行一次
 schedule.scheduleJob("*/30 * * * *", function () {
   Console.log(
     "------------------- 阿里云 ddns 解析程序执行！--------------------"
   );
-  Client.main(MY_ALIYUN_CONFIG);
+  Client.main();
 });

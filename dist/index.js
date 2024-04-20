@@ -37,9 +37,7 @@ class Client {
      */
     static Initialization(regionId) {
         let config = new $OpenApi.Config({});
-        // 您的AccessKey ID
-        // config.accessKeyId = Env.getEnv("ALICLOUD_ACCESS_KEY_ID");
-        // config.accessKeySecret = Env.getEnv("ALICLOUD_ACCESS_KEY_SECRET");
+        // AccessKey ID
         config.accessKeyId = darabonba_env_1.default.getEnv("ALICLOUD_ACCESS_KEY_ID");
         config.accessKeySecret = darabonba_env_1.default.getEnv("ALICLOUD_ACCESS_KEY_SECRET");
         // 您的可用区ID
@@ -81,8 +79,11 @@ class Client {
             tea_console_1.default.log(error.message);
         }
     }
-    static async main(args) {
-        const { regionid, domainName, RR, recordType } = args;
+    static async main() {
+        const domainName = darabonba_env_1.default.getEnv("DOMAIN_NAME");
+        const RR = darabonba_env_1.default.getEnv("RR");
+        const regionid = darabonba_env_1.default.getEnv("REGION_ID") || "cn-hangzhou"; // 默认杭州
+        const recordType = darabonba_env_1.default.getEnv("RECORD_TYPE") || "A"; // 默认 A 记录
         let client = Client.Initialization(regionid);
         let resp = await Client.DescribeDomainRecords(client, domainName, RR, recordType);
         if (tea_util_1.default.isUnset($tea.toMap(resp)) ||
@@ -121,16 +122,16 @@ class Client {
 exports.default = Client;
 // Client.main(process.argv.slice(2));
 const MY_ALIYUN_CONFIG = {
-    regionid: "cn-hangzhou",
-    // currentHostIP: "125.119.200.220", // 主机ip
-    domainName: "chrissong.top",
-    RR: "home",
-    recordType: "A",
+// regionid: "cn-hangzhou", // 区域id
+// currentHostIP: "125.119.200.220", // 主机ip
+// domainName: "chrissong.top", // 域名
+// RR: "home", // 解析主机
+// recordType: "A", // 记录类型
 };
-Client.main(MY_ALIYUN_CONFIG);
+Client.main();
 // 每半个小时执行一次
 node_schedule_1.default.scheduleJob("*/30 * * * *", function () {
     tea_console_1.default.log("------------------- 阿里云 ddns 解析程序执行！--------------------");
-    Client.main(MY_ALIYUN_CONFIG);
+    Client.main();
 });
 //# sourceMappingURL=index.js.map
